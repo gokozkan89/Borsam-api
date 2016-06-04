@@ -21,6 +21,7 @@ var http = require('http');
  res.status(200).json({result: recordsets[0]});
  }
  }
+ asdadsas
 
  proc.exec("bitirme.sel_person", [param1, param2], callback);
  }

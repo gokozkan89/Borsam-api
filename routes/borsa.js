@@ -313,6 +313,8 @@ function portfoyGetir(req, res, next) {
     var kullaniciId = req.query.kullaniciId;
 
     console.log(kullaniciId);
+    
+    //throw new Error("test");
 
     var pKullaniciId = {name: "kullaniciId", type: "Int", value: kullaniciId};
 

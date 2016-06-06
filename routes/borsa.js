@@ -44,24 +44,24 @@ function kullaniciEkle(req, res, next) {
     console.log(email);
     console.log(sifre);
 
-    var pAdi = { name: "adi", type: "VarChar", size: 50, value: adi };
-    var pSoyadi = { name: "soyadi", type: "VarChar", size: 50, value: soyadi };
-    var pEmail = { name: "email", type: "VarChar", size: 100, value: email };
-    var pSifre = { name: "sifre", type: "VarChar", size: 100, value: sifre };
+    var pAdi = {name: "adi", type: "VarChar", size: 50, value: adi};
+    var pSoyadi = {name: "soyadi", type: "VarChar", size: 50, value: soyadi};
+    var pEmail = {name: "email", type: "VarChar", size: 100, value: email};
+    var pSifre = {name: "sifre", type: "VarChar", size: 100, value: sifre};
 
     function callback(err, recordsets, returnValue, affected) {
         if (err) {
-            res.status(401).json({ error: err });
+            res.status(401).json({error: err});
         } else {
-            res.status(200).json({ result: recordsets[0][0] });
+            res.status(200).json({result: recordsets[0][0]});
         }
         /*
-        else if (recordsets && recordsets.length > 0) {
-            if (recordsets[0].Mesaj)
-                res.status(200).json({result: recordsets[0].Mesaj});
-            else if(recordsets[0].HataMesaji)
-                res.status(401).json({result: recordsets[0].HataMesaji});
-        }*/
+         else if (recordsets && recordsets.length > 0) {
+         if (recordsets[0].Mesaj)
+         res.status(200).json({result: recordsets[0].Mesaj});
+         else if(recordsets[0].HataMesaji)
+         res.status(401).json({result: recordsets[0].HataMesaji});
+         }*/
     }
 
     proc.exec("bitirme.spKullaniciEkle", [pAdi, pSoyadi, pEmail, pSifre], callback);
@@ -78,14 +78,14 @@ function kullaniciKontrol(req, res, next) {
     console.log(email);
     console.log(sifre);
 
-    var pEmail = { name: "email", type: "VarChar", size: 100, value: email };
-    var pSifre = { name: "sifre", type: "VarChar", size: 100, value: sifre };
+    var pEmail = {name: "email", type: "VarChar", size: 100, value: email};
+    var pSifre = {name: "sifre", type: "VarChar", size: 100, value: sifre};
 
     function callback(err, recordsets, returnValue, affected) {
         if (err) {
-            res.status(401).json({ error: err });
+            res.status(401).json({error: err});
         } else {
-            res.status(200).json({ result: recordsets[0][0] });
+            res.status(200).json({result: recordsets[0][0]});
         }
         /*
          else if (recordsets && recordsets.length > 0) {
@@ -116,17 +116,17 @@ function emirEkle(req, res, next) {
     console.log(teklifEdilenBirimFiyat);
     console.log(kullaniciId);
 
-    var pEmirTipi = { name: "emirTipi", type: "VarChar", size: 1, value: emirTipi };
-    var pHisseKodu = { name: "hisseKodu", type: "VarChar", size: 6, value: hisseKodu };
-    var pHisseAdeti = { name: "hisseAdeti", type: "Int", value: hisseAdeti };
-    var pTeklifEdilenBirimFiyat = { name: "teklifEdilenBirimFiyat", type: "Money", value: teklifEdilenBirimFiyat };
-    var pKullaniciId = { name: "kullaniciId", type: "Int", value: kullaniciId };
+    var pEmirTipi = {name: "emirTipi", type: "VarChar", size: 1, value: emirTipi};
+    var pHisseKodu = {name: "hisseKodu", type: "VarChar", size: 6, value: hisseKodu};
+    var pHisseAdeti = {name: "hisseAdeti", type: "Int", value: hisseAdeti};
+    var pTeklifEdilenBirimFiyat = {name: "teklifEdilenBirimFiyat", type: "Money", value: teklifEdilenBirimFiyat};
+    var pKullaniciId = {name: "kullaniciId", type: "Int", value: kullaniciId};
 
     function callback(err, recordsets, returnValue, affected) {
         if (err) {
-            res.status(401).json({ error: err });
+            res.status(401).json({error: err});
         } else {
-            res.status(200).json({ result: 'OK' });
+            res.status(200).json({result: 'OK'});
         }
     }
 
@@ -164,7 +164,7 @@ var hisseBilgileriniAl = function (emir) {
                     console.log('hisseFiyati - ' + hisseKodu + ' : ' + hisseFiyati);
 
                     if ((emirTipi == 'A' && hisseFiyati <= teklifEdilenBirimFiyat) || (emirTipi == 'S' && hisseFiyati >= teklifEdilenBirimFiyat)) {
-                        var pEmirId = { name: "emirId", type: "Int", value: emirId };
+                        var pEmirId = {name: "emirId", type: "Int", value: emirId};
                         var pGerceklesenBirimFiyat = {
                             name: "gerceklesenBirimFiyat",
                             type: "Money",
@@ -207,21 +207,24 @@ var hisseBilgileriniAl = function (emir) {
 };
 
 function emirKontrol2() {
-    var proc = new sp();
+    try {
+        var proc = new sp();
 
-    console.log("emirKontrol2");
+        console.log("emirKontrol2");
 
-    proc.exec("bitirme.spEmirleriAl", [], function (err, recordsets, returnValue, affected) {
-        if (!err) {
-            if (recordsets.length > 0) {
-                var emirler = recordsets[0];
+        proc.exec("bitirme.spEmirleriAl", [], function (err, recordsets, returnValue, affected) {
+            if (!err) {
+                if (recordsets.length > 0) {
+                    var emirler = recordsets[0];
 
-                for (var i = 0; i < emirler.length; i++) {
-                    hisseBilgileriniAl(emirler[i]);
+                    for (var i = 0; i < emirler.length; i++) {
+                        hisseBilgileriniAl(emirler[i]);
+                    }
                 }
             }
-        }
-    });
+        });
+    } catch (ex) {
+    }
 }
 
 function emirKontrol(req, res, next) {
@@ -231,7 +234,7 @@ function emirKontrol(req, res, next) {
         //console.log(recordsets);
 
         if (err) {
-            res.status(401).json({ error: err });
+            res.status(401).json({error: err});
         } else {
             if (recordsets.length > 0) {
                 var emirler = recordsets[0];
@@ -254,7 +257,7 @@ function emirKontrol(req, res, next) {
                     //console.log(teklifEdilenBirimFiyat);
                 }
 
-                res.status(200).json({ result: emirler.length });
+                res.status(200).json({result: emirler.length});
             }
         }
     });
@@ -268,14 +271,14 @@ function takipListesineEkle(req, res, next) {
     console.log(hisseKodu);
     console.log(kullaniciId);
 
-    var pHisseKodu = { name: "hisseKodu", type: "VarChar", size: 6, value: hisseKodu };
-    var pKullaniciId = { name: "kullaniciId", type: "Int", value: kullaniciId };
+    var pHisseKodu = {name: "hisseKodu", type: "VarChar", size: 6, value: hisseKodu};
+    var pKullaniciId = {name: "kullaniciId", type: "Int", value: kullaniciId};
 
     function callback(err, recordsets, returnValue, affected) {
         if (err) {
-            res.status(401).json({ error: err });
+            res.status(401).json({error: err});
         } else {
-            res.status(200).json({ result: 'OK' });
+            res.status(200).json({result: 'OK'});
         }
     }
 
@@ -288,15 +291,15 @@ function takipListesiGetir(req, res, next) {
 
     console.log(kullaniciId);
 
-    var pKullaniciId = { name: "kullaniciId", type: "Int", value: kullaniciId };
+    var pKullaniciId = {name: "kullaniciId", type: "Int", value: kullaniciId};
 
     function callback(err, recordsets, returnValue, affected) {
         if (err) {
-            res.status(401).json({ error: err });
+            res.status(401).json({error: err});
         } else {
             if (recordsets != null && recordsets.length > 0) {
                 var takipListesi = recordsets[0];
-                res.status(200).json({ result: takipListesi });
+                res.status(200).json({result: takipListesi});
             }
         }
     }
@@ -312,14 +315,14 @@ function takipListesindenCikar(req, res, next) {
     console.log(hisseKodu);
     console.log(kullaniciId);
 
-    var pHisseKodu = { name: "hisseKodu", type: "VarChar", size: 6, value: hisseKodu };
-    var pKullaniciId = { name: "kullaniciId", type: "Int", value: kullaniciId };
+    var pHisseKodu = {name: "hisseKodu", type: "VarChar", size: 6, value: hisseKodu};
+    var pKullaniciId = {name: "kullaniciId", type: "Int", value: kullaniciId};
 
     function callback(err, recordsets, returnValue, affected) {
         if (err) {
-            res.status(401).json({ error: err });
+            res.status(401).json({error: err});
         } else {
-            res.status(200).json({ result: 'OK' });
+            res.status(200).json({result: 'OK'});
         }
     }
 
@@ -334,16 +337,16 @@ function portfoyGetir(req, res, next) {
 
     //throw new Error("test");
 
-    var pKullaniciId = { name: "kullaniciId", type: "Int", value: kullaniciId };
+    var pKullaniciId = {name: "kullaniciId", type: "Int", value: kullaniciId};
 
     function callback(err, recordsets, returnValue, affected) {
         if (err) {
-            res.status(401).json({ error: err });
+            res.status(401).json({error: err});
         } else {
             if (recordsets != null && recordsets.length > 1) {
                 var portfoyListesi = recordsets[0];
                 var kullaniciListesi = recordsets[1];
-                res.status(200).json({ result: { PortfoyListesi: portfoyListesi, KullaniciListesi: kullaniciListesi } });
+                res.status(200).json({result: {PortfoyListesi: portfoyListesi, KullaniciListesi: kullaniciListesi}});
             }
         }
     }
@@ -353,14 +356,15 @@ function portfoyGetir(req, res, next) {
 
 function hisseOneriGetir(req, res, next) {
     var proc = new sp();
+
     function callback(err, recordsets, returnValue, affected) {
         if (err) {
-            res.status(401).json({ error: err });
+            res.status(401).json({error: err});
         } else {
             if (recordsets != null && recordsets.length > 0) {
                 var hisseOneriListesi = recordsets[0];
 
-                res.status(200).json({ result: { HisseOneriListesi: hisseOneriListesi } });
+                res.status(200).json({result: {HisseOneriListesi: hisseOneriListesi}});
             }
         }
     }
@@ -376,16 +380,16 @@ function portfoyDetayGetir(req, res, next) {
     console.log(kullaniciId);
     console.log(hisseKodu);
 
-    var pKullaniciId = { name: "kullaniciId", type: "Int", value: kullaniciId };
-    var pHisseKodu = { name: "hisseKodu", type: "VarChar", size: 6, value: hisseKodu };
+    var pKullaniciId = {name: "kullaniciId", type: "Int", value: kullaniciId};
+    var pHisseKodu = {name: "hisseKodu", type: "VarChar", size: 6, value: hisseKodu};
 
     function callback(err, recordsets, returnValue, affected) {
         if (err) {
-            res.status(401).json({ error: err });
+            res.status(401).json({error: err});
         } else {
             if (recordsets != null && recordsets.length > 0) {
                 var portfoy = recordsets[0];
-                res.status(200).json({ result: portfoy });
+                res.status(200).json({result: portfoy});
             }
         }
     }
@@ -398,11 +402,11 @@ function hisseListesiGetir(req, res, next) {
 
     function callback(err, recordsets, returnValue, affected) {
         if (err) {
-            res.status(401).json({ error: err });
+            res.status(401).json({error: err});
         } else {
             if (recordsets != null && recordsets.length > 0) {
                 var hisseListesi = recordsets[0];
-                res.status(200).json({ result: hisseListesi });
+                res.status(200).json({result: hisseListesi});
             }
         }
     }
